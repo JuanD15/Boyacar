@@ -1,0 +1,1 @@
+windows.alert('Hola mundo')
