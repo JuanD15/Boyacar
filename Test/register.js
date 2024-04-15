@@ -35,7 +35,7 @@ class User {
   var password = 'XDsen318_ñ';
   var id_number = '1002333333';
   nUser.setData(first_name,last_name,email,phone_number,password,id_number);
-
+  console.log('hola mundo');
   
   
   
