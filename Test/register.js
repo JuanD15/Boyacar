@@ -78,7 +78,8 @@ class User {
   nUser.setData(first_name,last_name,email,phone_number,password,id_number);
   console.log('test branch');
   
-  
+console.log('QUIZOOOO CARRILLO');
+
   
   
   console.log(nUser);
