@@ -1,3 +1,44 @@
+/*const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware para parsear el body de las solicitudes
+app.use(bodyParser.json());
+
+// Array para almacenar temporalmente los usuarios registrados (puedes usar una base de datos en su lugar)
+let users = [];
+
+// Ruta para registrar un nuevo usuario
+app.post('/register', (req, res) => {
+  const { username, email, password } = req.body;
+
+  // Verificar si se proporcionaron todos los datos necesarios
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'Faltan datos para el registro' });
+  }
+
+  // Verificar si el usuario ya está registrado
+  const existingUser = users.find(user => user.email === email);
+  if (existingUser) {
+    return res.status(400).json({ message: 'El usuario ya está registrado' });
+  }
+
+  // Crear un nuevo usuario
+  const newUser = { username, email, password };
+  users.push(newUser);
+
+  return res.status(201).json({ message: 'Usuario registrado exitosamente', user: newUser });
+});
+
+// Iniciar el servidor
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
+*/
+
+
 class User {
     constructor(){
         
