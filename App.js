@@ -1,22 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
-import Login from './components/Login';
+import { Inter_400Regular, Inter_300Light } from '@expo-google-fonts/inter';
+import RootNavigator from './navigation/main';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Login />
-    </View>
-  );
+  return <RootNavigator />;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1
-  },
-});
+
 
