@@ -1,5 +1,5 @@
 //Modelo de lo que toca hacer
-/*const express = require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -37,7 +37,7 @@ app.post('/register', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
-*/
+
 
 
 class User {
@@ -79,7 +79,7 @@ class User {
   nUser.setData(first_name,last_name,email,phone_number,password,id_number);
   console.log('test branch');
   
-console.log('QUIZOOOO CARRILLO');
+  console.log('QUIZOOOO CARRILLO');
 
   
   
