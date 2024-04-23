@@ -85,7 +85,7 @@ export default LoginStyles = {
     },
     viewRegister: {
         flexDirection: 'row',
-        bottom: -120
+        bottom: -130
     },
     noAccountText: {
         fontFamily: 'Inter_300Light',

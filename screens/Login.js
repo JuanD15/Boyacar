@@ -38,7 +38,7 @@ export default function Login(props) {
                 <TouchableOpacity style={styles.forgetPasswordLink} onPress={rememberPassword}>
                     <Text style={styles.forgetPassword}>¿Olvidaste tu contraseña?</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={register} activeOpacity={0.8}>
+                <TouchableOpacity style={styles.button} onPress={()=>console.log('Esta opción aún no esta disponible')} activeOpacity={0.8}>
                     <Text style={styles.buttonText}>Iniciar Sesión</Text>
                 </TouchableOpacity>
                 <View style={styles.viewRegister}>
