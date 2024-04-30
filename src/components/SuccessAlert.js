@@ -1,15 +1,15 @@
-import React from 'react';
+// SuccessAlert.js
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const SuccessAlert = () => {
+export default function useSuccessAlert() {
   const navigation = useNavigation();
 
   const handleAccept = () => {
-    navigation.navigate('Login'); // Reemplaza 'Login' con la pantalla de login real
+    navigation.navigate('Login');
   };
 
-  return (
+  return () => {
     Alert.alert(
       'Éxito',
       'El pasajero se ha agregado correctamente.',
@@ -20,8 +20,6 @@ const SuccessAlert = () => {
         },
       ],
       { cancelable: false }
-    )
-  );
+    );
+  };
 };
-
-export default SuccessAlert;

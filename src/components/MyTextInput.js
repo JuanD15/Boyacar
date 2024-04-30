@@ -1,6 +1,6 @@
 import { TextInput, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
-import colors from "../assets/styles/colors";
+import colors from "../constants/colors";
 
 export default MyTextInput = ({ style, label, ...otherProps }) => {
     const [isFocused, setFocus] = useState(false);

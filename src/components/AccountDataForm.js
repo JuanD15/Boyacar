@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity, image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import MyTextInput from './MyTextInput';
-import colors from '../assets/styles/colors';
+import colors from '../constants/colors';
 
 export default AccountDataForm = (props) => {
     const { formData, setFormData, isAccountFormComplete, setIsAccountFormComplete } = props;
@@ -84,12 +84,14 @@ export default AccountDataForm = (props) => {
                         value={formData.password}
                         label={'Contraseña'}
                         onChangeText={(value) => handleInputChange('password', value)}
+                        secureTextEntry={true}
                     />
                     <MyTextInput
                         style={[styles.myInput, styles.repeatPasswordSection]}
                         value={formData.repeatPassword}
                         label={'Repetir contraseña'}
                         onChangeText={(value) => handleInputChange('repeatPassword', value)}
+                        secureTextEntry={true}
                     />
                 </View>
             </ScrollView>
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.PRIMARY_COLOR,
     },
     title: {
-        fontFamily: 'Inter_400Regular',
+        fontFamily: 'Inter_Regular',
         fontSize: 25,
         color: 'white',
     },

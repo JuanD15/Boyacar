@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import RegisterFormStyles from "../assets/styles/RegisterFormStyles";
-import PersonalDataForm from "../components/PersonalDataForm";
-import AccountDataForm from "../components/AccountDataForm";
-import { postPassenger } from "../services/PassengersService"
-import { formatDate } from "../utils/FormatDate";
-import colors from "../assets/styles/colors";
-import SuccessAlert from "../components/SuccessAlert";
-
+import PersonalDataForm from "../../components/PersonalDataForm";
+import AccountDataForm from "../../components/AccountDataForm";
+import { formatDate } from "../../utils/FormatDate";
+import useSuccessAlert from "../../components/SuccessAlert";
+import colors from '../../constants/colors';
 
 export default function RegisterForm(props) {
     const [formData, setFormData] = useState(defaultValue());
@@ -26,7 +23,8 @@ export default function RegisterForm(props) {
         }
     };
 
-    const submit = () => {
+    const showSuccessAlert = useSuccessAlert();
+    const submit = async () => {
         const passenger = {
             nombres: formData.names,
             apellidos: formData.lastNames,
@@ -36,10 +34,9 @@ export default function RegisterForm(props) {
             correo_pasajero: formData.email,
             cedula_pasajero: formData.documentId,
         }
-        postPassenger(passenger)
-        return (
-            <SuccessAlert />
-        )
+
+
+        showSuccessAlert();
     }
 
     return (
@@ -92,4 +89,27 @@ function defaultValue() {
     }
 }
 
-const styles = StyleSheet.create(RegisterFormStyles)
+const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        with: '100%',
+    },
+    formFooter: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '15%'
+    },
+    button: {
+        borderRadius: 10,
+        width: 310,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontFamily: 'Inter_Light',
+        fontSize: 17,
+        fontWeight: 'bold',
+    },
+})

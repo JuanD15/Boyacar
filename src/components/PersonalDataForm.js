@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, StyleSheet, Platform } from 'react-native';
 import MyTextInput from './MyTextInput';
-import colors from '../assets/styles/colors';
+import colors from '../constants/colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default PersonalDataForm = (props) => {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.PRIMARY_COLOR,
     },
     title: {
-        fontFamily: 'Inter_400Regular',
+        fontFamily: 'Inter_Regular',
         fontSize: 25,
         color: 'white',
     },
