@@ -2,9 +2,10 @@ import { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import PersonalDataForm from "../../components/PersonalDataForm";
 import AccountDataForm from "../../components/AccountDataForm";
-import { formatDate } from "../../utils/FormatDate";
 import useSuccessAlert from "../../components/SuccessAlert";
 import colors from '../../constants/colors';
+import { formatDate } from "../../utils/FormatDate";
+import { registerUserData } from "../../services/RegisterService.mjs";
 
 export default function RegisterForm(props) {
     const [formData, setFormData] = useState(defaultValue());
@@ -25,17 +26,13 @@ export default function RegisterForm(props) {
 
     const showSuccessAlert = useSuccessAlert();
     const submit = async () => {
-        const passenger = {
-            nombres: formData.names,
-            apellidos: formData.lastNames,
-            fecha_nacimiento_pasajero: formatDate(formData.birthdate),
-            contraseña_pasajero: formData.password,
-            telefono_pasajero: formData.phoneNumber,
-            correo_pasajero: formData.email,
-            cedula_pasajero: formData.documentId,
-        }
+        formData.birthDate = formatDate(formData.birthDate);
+        formData.genre = formData.genre === '' && null;
 
+        console.log(formData);
 
+        const result = await registerUserData(formData)
+        console.log('result --------', result);
         showSuccessAlert();
     }
 
@@ -70,7 +67,6 @@ export default function RegisterForm(props) {
                         <Text style={styles.buttonText}>Registrarse</Text>
                     </TouchableOpacity>
                 </View>
-
             )}
         </View >
     )
@@ -80,12 +76,15 @@ function defaultValue() {
     return {
         names: '',
         lastNames: '',
-        birthdate: '',
+        birthDate: '',
+        documentId: '',
+        documentId_image: 'URL',
+        email: '',
+        phoneNumber: '',
+        genre: '',
+        profilePicture: 'URL',
         password: "",
         repeatPassword: '',
-        phoneNumber: '',
-        email: '',
-        documentId: '',
     }
 }
 

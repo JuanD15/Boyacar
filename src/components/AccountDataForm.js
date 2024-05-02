@@ -65,7 +65,7 @@ export default AccountDataForm = (props) => {
                     )}
                     <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
                         {image && <Image source={{ uri: image }} style={styles.image} />}
-                        {!image && <Text style={styles.imagePickerText}>Seleccionar Foto</Text>}
+                        {!image && <Text>Seleccionar Foto</Text>}
                     </TouchableOpacity>
                     <MyTextInput
                         style={styles.myInput}

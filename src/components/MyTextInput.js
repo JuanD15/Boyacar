@@ -7,7 +7,7 @@ export default MyTextInput = ({ style, label, ...otherProps }) => {
 
     return (
         <View style={styles.inputContainer}>
-            <Text style={[styles.inputLabel, isFocused && styles.labelFocused]} >{label}</Text>
+            <Text style={[styles.inputLabel, isFocused && styles.labelFocused]} >{label}<Text style={{ color: 'red' }}>{otherProps.required && ' *'}</Text></Text>
             <TextInput
                 {...otherProps}
                 style={[styles.input, isFocused && styles.inputFocused, style]}
@@ -15,6 +15,7 @@ export default MyTextInput = ({ style, label, ...otherProps }) => {
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
                 enabled={false}
+                maxLength={otherProps.maxLength}
             />
         </View>
     );
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.BACKGROUND_GRAY,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
+        maxWidth: '100%'
 
     },
     inputFocused: {
@@ -62,7 +64,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 5,
         color: 'gray',
         borderWidth: 1,
-        width: '100%'
+        minWidth: '100%',
+        maxWidth: '100%'
     },
     labelFocused: {
         borderTopLeftRadius: 10,
