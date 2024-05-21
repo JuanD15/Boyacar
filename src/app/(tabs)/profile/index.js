@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
-import { Link, router } from "expo-router";
+import React from 'react';
 import { StyleSheet, Text, View, } from "react-native";
-import Login from '../(account)/Login';
-import LoggedOut from '../../components/LoggedOut';
+import LoggedOut from './LoggedOut';
 
 export default function Profile() {
     const user = null;

@@ -1,23 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { Redirect } from "expo-router";
 
-export default function Feed() {
-
-    return (
-        <View style={styles.container}>
-            <Text>Bienvenido</Text>
-        </View>
-    );
+export default function TabIndex() {
+    return <Redirect href={'/trips/'} />
 }
-
-function testLog() {
-
-}
-
-const styles = StyleSheet.create({
-    container: {
-        alignContent: 'center',
-        justifyContent: 'center',
-    },
-});

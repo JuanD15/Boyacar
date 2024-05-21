@@ -5,7 +5,6 @@ import colors from '../constants/colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
-import { formatDate } from '../utils/FormatDate';
 
 export default PersonalDataForm = (props) => {
     let maxDate = new Date();

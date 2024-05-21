@@ -151,13 +151,12 @@ const styles = StyleSheet.create({
     },
     viewRegister: {
         flexDirection: 'row',
-        bottom: -130
+        bottom: -115
     },
     noAccountText: {
         fontFamily: 'Inter_Light',
         color: '#fff',
-        fontSize: 15
-
+        fontSize: 15,
     },
     registerText: {
         fontSize: 15,

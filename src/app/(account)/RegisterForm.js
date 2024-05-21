@@ -27,13 +27,13 @@ export default function RegisterForm(props) {
     const showSuccessAlert = useSuccessAlert();
     const submit = async () => {
         formData.birthDate = formatDate(formData.birthDate);
-        formData.genre = formData.genre === '' && null;
+        if (formData.genre === '') null
 
         console.log(formData);
 
         const result = await registerUserData(formData)
         console.log('result --------', result);
-        showSuccessAlert();
+        // showSuccessAlert();s
     }
 
     return (
@@ -61,7 +61,7 @@ export default function RegisterForm(props) {
                     </TouchableOpacity>
                 </View>) : (
                 < View style={styles.formFooter}>
-                    <TouchableOpacity onPress={submit}
+                    <TouchableOpacity onPress={() => { console.log('Registrar'); }}
                         style={[styles.button, { backgroundColor: isAccountFormComplete ? colors.PRIMARY_COLOR : 'gray' }]}
                         disabled={!isAccountFormComplete}>
                         <Text style={styles.buttonText}>Registrarse</Text>
