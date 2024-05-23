@@ -7,7 +7,7 @@ import colors from '../../constants/colors';
 import { formatDate } from "../../utils/FormatDate";
 import { registerUserData } from "../../services/RegisterService.mjs";
 
-export default function RegisterForm(props) {
+export default function RegisterForm() {
     const [formData, setFormData] = useState(defaultValue());
     const [isPersonalFormComplete, setIsPersonalFormComplete] = useState(false);
     const [isAccountFormComplete, setIsAccountFormComplete] = useState(false);
@@ -32,6 +32,11 @@ export default function RegisterForm(props) {
         console.log(formData);
 
         const result = await registerUserData(formData)
+            .then(() => {
+                console.log('Registrado con exito');
+            }).catch(() => {
+                console.log('Error');
+            })
         console.log('result --------', result);
         // showSuccessAlert();s
     }

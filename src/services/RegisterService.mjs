@@ -7,7 +7,7 @@ export async function registerUserData(userData) {
    * Inserción de datos en la tabla 'Persona' 
    * mediante el cliente creado anteriormente
    */
-  // const { data, error } = await supabas
+  // const { data, error } = await supabase
   //   .from('Person')
   //   .insert([
   //     {

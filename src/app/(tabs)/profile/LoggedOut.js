@@ -13,6 +13,11 @@ export default function LoggedOut() {
                     <Text>Login</Text>
                 </TouchableOpacity>
             </Link >
+            <Link href={'profile/tripsManage/TripForm'} asChild>
+                <TouchableOpacity style={styles.button} >
+                    <Text>Crear Viaje</Text>
+                </TouchableOpacity>
+            </Link >
         </View>
     )
 }

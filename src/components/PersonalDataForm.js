@@ -14,7 +14,7 @@ export default PersonalDataForm = (props) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [selectedDate, setSelectedDate] = useState(maxDate);
     const [formErrors, setFormErrors] = useState({});
-    const [selectedValue, setSelectedValue] = useState('Seleccionar...');
+    const [selectedValue, setSelectedValue] = useState('');
 
 
     useEffect(() => {
@@ -49,7 +49,6 @@ export default PersonalDataForm = (props) => {
 
     return (
         <>
-
             <ScrollView style={styles.personalInfoScroll}>
                 <View style={styles.personalInfo}>
                     <MyTextInput
