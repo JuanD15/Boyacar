@@ -1,22 +1,29 @@
-import { ImageBackground, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, StatusBar } from "react-native";
+import { useState } from "react";
+import { ImageBackground, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, StatusBar, Alert } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import { Link } from "expo-router";
+import { signInWithEmailAndPassword } from "../../services/SignInService";
+import { supabase } from "../../services/ConnectService.mjs";
+
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const rememberPassword = () => {
         console.log("¿Olvidaste tu contraseña");
     }
-    const login = () => {
-        console.log('Login');
+    const onSignInPress = async () => {
+        const { error } = await signInWithEmailAndPassword({ email, password })
+
+        if (error) Alert.alert('No se puedo iniciar sesión', error.message)
     }
 
     const register = () => {
         console.log('Register');
         navigation.navigate('RegisterForm')
     }
-
 
     return (
         <View style={styles.container} >
@@ -34,19 +41,21 @@ export default function Login() {
                 <Text style={styles.title}>Iniciar Sesión</Text>
                 <View style={styles.viewInputs}>
                     <TextInput
-                        placeholder="Nombre o Correo"
+                        placeholder="Correo electrónico"
                         placeholderTextColor='rgba(255,255,255,0.6)'
+                        onChange={setEmail}
                         style={styles.input} />
                     <TextInput
                         placeholder="Contraseña"
                         placeholderTextColor='rgba(255,255,255,0.6)'
                         keyboardType='visible-password'
+                        onChange={setPassword}
                         style={styles.input} />
                 </View>
                 <TouchableOpacity style={styles.forgetPasswordLink} onPress={rememberPassword}>
                     <Text style={styles.forgetPassword}>¿Olvidaste tu contraseña?</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => console.log('Esta opción aún no esta disponible')} activeOpacity={0.8}>
+                <TouchableOpacity style={styles.button} onPress={onSignInPress} activeOpacity={0.8}>
                     <Text style={styles.buttonText}>Iniciar Sesión</Text>
                 </TouchableOpacity>
                 <View style={styles.viewRegister}>

@@ -1,3 +1,5 @@
+import { getURL } from "../services/ImagesServices"
+
 const feedData = [
     {
         id: 0,
@@ -11,7 +13,7 @@ const feedData = [
         driverFirstName: 'Felipe',
         driverFirstLastName: 'Álvarez',
         driverAge: 35,
-        driverPhotography: 'URL',
+        driverPhotography: '',
         freeSeats: 2
     },
     {
@@ -26,7 +28,7 @@ const feedData = [
         driverFirstName: 'Juan',
         driverFirstLastName: 'Lopez',
         driverAge: 32,
-        driverPhotography: 'URL',
+        driverPhotography: '',
         freeSeats: 3
     },
     {
@@ -41,7 +43,7 @@ const feedData = [
         driverFirstName: 'Fernando',
         driverFirstLastName: 'Fernandez',
         driverAge: 28,
-        driverPhotography: 'URL',
+        driverPhotography: '',
         freeSeats: 2
     },
     {
@@ -56,7 +58,7 @@ const feedData = [
         driverFirstName: 'Alejandro',
         driverFirstLastName: 'Smith',
         driverAge: 37,
-        driverPhotography: 'URL',
+        driverPhotography: '',
         freeSeats: 4
     },
 ]

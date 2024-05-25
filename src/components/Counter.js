@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     count: {
-        fontSize: 20,
+        fontSize: 15,
         marginHorizontal: 10,
     },
 });

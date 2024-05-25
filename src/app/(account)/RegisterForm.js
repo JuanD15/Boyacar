@@ -1,119 +1,90 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import PersonalDataForm from "../../components/PersonalDataForm";
-import AccountDataForm from "../../components/AccountDataForm";
-import useSuccessAlert from "../../components/SuccessAlert";
-import colors from '../../constants/colors';
-import { formatDate } from "../../utils/FormatDate";
-import { registerUserData } from "../../services/RegisterService.mjs";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import EmailPasswordForm from '../../components/EmailPasswordForm';
+import PersonalDetailsForm from '../../components/PersonalDetailsForm';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import colors from "../../constants/colors";
+import { signUpWithEmailAndPassword } from '../../services/SignUpService';
 
-export default function RegisterForm() {
-    const [formData, setFormData] = useState(defaultValue());
-    const [isPersonalFormComplete, setIsPersonalFormComplete] = useState(false);
-    const [isAccountFormComplete, setIsAccountFormComplete] = useState(false);
-    const [confirmForm, setConfirmForm] = useState(false);
+export default function Register({ uploadProfileImage }) {
+    const [step, setStep] = useState(1);
+    const [emailPasswordDetails, setEmailPasswordDetails] = useState(null);
 
-    const handleContinue = () => {
-        if (isPersonalFormComplete && isAccountFormComplete) {
-            console.log('complete');
-        } else if (isPersonalFormComplete && !isAccountFormComplete) {
-            setConfirmForm(true)
-            console.log('confirm');
-        } else {
-            console.log('error');
+    useEffect(() => {
+        checkProgress();
+    }, []);
+
+    const checkProgress = async () => {
+        const savedStep = await AsyncStorage.getItem('registerStep');
+        if (savedStep) {
+            setStep(parseInt(savedStep));
+            if (parseInt(savedStep) > 1) {
+                Alert.alert('Aviso', 'Aún no ha llenado todos los datos y debe hacerlo.');
+            }
         }
     };
 
-    const showSuccessAlert = useSuccessAlert();
-    const submit = async () => {
-        formData.birthDate = formatDate(formData.birthDate);
-        if (formData.genre === '') null
+    const handleNext = async () => {
+        // setStep(1)
+        if (step === 1 && emailPasswordDetails) {
 
-        console.log(formData);
+            // setStep(2);
+            // await AsyncStorage.setItem('registerStep', '2');
 
-        const result = await registerUserData(formData)
-            .then(() => {
-                console.log('Registrado con exito');
-            }).catch(() => {
-                console.log('Error');
-            })
-        console.log('result --------', result);
-        // showSuccessAlert();s
-    }
+        } else if (step === 2) {
+            // const response = await submitPersonalDetails(details);
+            const response = { success: true };
+            if (response.success) {
+                Alert.alert('Registro completado.');
+                await AsyncStorage.removeItem('registerStep');
+            } else {
+                Alert.alert('Error', response.message);
+            }
+        } else {
+            Alert.alert('Error', 'Debe completar el formulario actual antes de continuar.');
+        }
+    };
 
     return (
         <View style={styles.container}>
-            {(!isPersonalFormComplete || !confirmForm) ? (
-                <PersonalDataForm
-                    formData={formData}
-                    setFormData={setFormData}
-                    isPersonalFormComplete={isPersonalFormComplete}
-                    setIsPersonalFormComplete={setIsPersonalFormComplete}
-                />) : (
-                <AccountDataForm
-                    formData={formData}
-                    setFormData={setFormData}
-                    isAccountFormComplete={isAccountFormComplete}
-                    setIsAccountFormComplete={setIsAccountFormComplete}
-                />
-            )}
-            {(!isPersonalFormComplete || !confirmForm) ? (
-                < View style={styles.formFooter}>
-                    <TouchableOpacity onPress={handleContinue}
-                        style={[styles.button, { backgroundColor: isPersonalFormComplete ? colors.PRIMARY_COLOR : 'gray' }]}
-                        disabled={!isPersonalFormComplete}>
-                        <Text style={styles.buttonText}>Continuar</Text>
-                    </TouchableOpacity>
-                </View>) : (
-                < View style={styles.formFooter}>
-                    <TouchableOpacity onPress={() => { console.log('Registrar'); }}
-                        style={[styles.button, { backgroundColor: isAccountFormComplete ? colors.PRIMARY_COLOR : 'gray' }]}
-                        disabled={!isAccountFormComplete}>
-                        <Text style={styles.buttonText}>Registrarse</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-        </View >
-    )
-}
-
-function defaultValue() {
-    return {
-        names: '',
-        lastNames: '',
-        birthDate: '',
-        documentId: '',
-        documentId_image: 'URL',
-        email: '',
-        phoneNumber: '',
-        genre: '',
-        profilePicture: 'URL',
-        password: "",
-        repeatPassword: '',
-    }
+            <View style={styles.stepsIndicator}>
+                <View style={[styles.step, step >= 1 && styles.activeStep]}></View>
+                <View style={[styles.step, step >= 2 && styles.activeStep]}></View>
+            </View>
+            {step === 1 && <EmailPasswordForm setEmailPasswordDetails={setEmailPasswordDetails} uploadProfileImage={uploadProfileImage} handleNext={handleNext} />}
+            {step === 2 && <PersonalDetailsForm handleNext={handleNext} />}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        with: '100%',
+        flex: 1,
+        padding: 20,
+        backgroundColor: 'white',
     },
-    formFooter: {
-        alignItems: 'center',
+    stepsIndicator: {
+        flexDirection: 'row',
         justifyContent: 'center',
-        height: '15%'
+    },
+    step: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'gray',
+        margin: 5,
+    },
+    activeStep: {
+        backgroundColor: colors.PRIMARY_COLOR,
     },
     button: {
-        borderRadius: 10,
-        width: 310,
-        height: 50,
+        backgroundColor: colors.PRIMARY_COLOR,
+        padding: 15,
+        borderRadius: 5,
         alignItems: 'center',
-        justifyContent: 'center',
     },
     buttonText: {
-        color: '#fff',
-        fontFamily: 'Inter_Light',
-        fontSize: 17,
-        fontWeight: 'bold',
+        color: 'white',
+        fontSize: 18,
     },
-})
+});

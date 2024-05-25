@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
-import { EvilIcons, AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { EvilIcons, AntDesign, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import colors from "../constants/colors";
 import { Link } from "expo-router";
 import { formatNumber } from "../utils/formatNumbers";
@@ -27,9 +27,11 @@ export default function RouteDataComponent({ data }) {
                     <Text style={styles.infoText}>{data.driverRating} / 5.0 - {data.numberOfOpinios} opiniones</Text>
                 </View>
                 <View style={styles.driverInfoSection}>
-                    <View style={styles.driverPhoto}>
-
-                    </View>
+                    {data.driverPhotography ? (
+                        <Image source={{ uri: data.driverPhotography }} style={styles.driverPhoto} />
+                    ) : (
+                        <FontAwesome name="user-circle-o" size={70} color={colors.PRIMARY_COLOR} style={styles.driverPhoto} />
+                    )}
                     <View style={styles.driverInfo}>
                         <Text style={styles.driverNames}>{data.driverFirstName} {data.driverFirstLastName}</Text>
                         <Text style={styles.driverAge}>{data.driverAge} años</Text>
@@ -82,11 +84,10 @@ const styles = StyleSheet.create({
         top: '40%'
     },
     driverPhoto: {
-        backgroundColor: colors.BACKGROUND_GRAY,
-        height: 80,
         width: 80,
+        height: 80,
         borderRadius: 50,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     driverInfo: {
         alignContent: 'center',

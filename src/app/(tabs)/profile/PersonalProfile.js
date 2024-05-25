@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView, FlatList } from "react-native";
 import colors from "../../../constants/colors";
 import { MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
-import { UserContext } from "../../../providers/UserProvider";
+import { AuthContext, useAuth } from "../../../providers/AuthProvider";
 import PhotoCarousel from '../../../components/PhotoCarousel'
 import { Link, router } from "expo-router";
 import CommentSection from "../../../components/CommentSection";
@@ -17,10 +17,26 @@ const DriverRating = ({ rating }) => (// Muestra la calificación si el usuario 
 );
 
 export default function PersonalProfile() {
-    const { actualUser } = useContext(UserContext);
+    const { session, initialized } = useAuth();
 
     const screenWidth = Dimensions.get("window").width
     const screenHeight = Dimensions.get("window").height
+
+    const driverConfigOptions = () => {
+        const options = ['Verificar perfil']
+        if (actualUser.user_type.toLowerCase() === 'conductor') {
+            options.push('Informacion de vehiculo', 'Información de licencia')
+        }
+        return options
+    }
+
+    const redirectUserToForm = () => {
+        if (actualUser.user_type.toLowerCase() === 'conductor') {
+            router.push('profile/tripsManage/TripForm')
+        } else {
+            router.push('profile/VehicleForm')
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -29,15 +45,19 @@ export default function PersonalProfile() {
                 style={[styles.infoBlock, styles.userPersonalInfoSection,
                 { width: screenWidth * 0.95, height: screenHeight * 0.16 }]}>
                 <View style={styles.userPersonalInfo}>
-                    <Text style={styles.userName}>{actualUser.first_name} {actualUser.last_name}</Text>
+                    <Text style={styles.userName}>{actualUser.person_name.split(' ')[0]} {actualUser.person_last_name.split(' ')[0]}</Text>
                     <Text style={styles.info}>
-                        {actualUser.userType}
-                        {actualUser.userType.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
+                        {actualUser.user_type}
+                        {actualUser.user_type.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
                             <DriverRating rating={actualUser.rating} />
                         )}
                     </Text>
                 </View>
-                <View style={styles.userProfilePicture}></View>
+                {actualUser.person_photo ? (
+                    <Image source={{ uri: actualUser.person_photo }} style={styles.userProfilePicture} />
+                ) : (
+                    <FontAwesome name="user-circle-o" size={80} color={colors.PRIMARY_COLOR} />
+                )}
                 <MaterialIcons name="keyboard-arrow-right" size={24} color="rgba(0,0,0,0.2)"
                     style={styles.arrowIcon} />
             </TouchableOpacity>
@@ -45,10 +65,11 @@ export default function PersonalProfile() {
                 activeOpacity={0.8}
                 style={[styles.infoBlock,
                 { width: screenWidth * 0.95, height: screenHeight * 0.14 }]}
-                onPress={() => router.push('profile/tripsManage/TripForm')}>
+                onPress={() => redirectUserToForm()}>
                 <View>
                     <Text style={styles.infoTitle}>Crea un viaje</Text>
-                    <Text style={styles.infoText}>Comparte tu viaje y comparte tus gastos</Text>
+                    <Text style={styles.infoText}>{actualUser.user_type.toLowerCase() === 'conductor' ?
+                        'Comparte tu viaje y comparte tus gastos' : 'Vuelvete conductor y comparte tus viajes'}</Text>
                 </View>
                 <Image source={require('../../../../assets/images/car-icon.png')} style={{ width: 50, height: 30, }} />
                 <MaterialIcons name="keyboard-arrow-right" size={24} color="rgba(0,0,0,0.2)"
@@ -76,7 +97,7 @@ export default function PersonalProfile() {
                     </View>
                     <PhotoCarousel />
                 </View>
-                {actualUser.userType.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
+                {actualUser.user_type.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
                     <View style={styles.profileOptionsSection}>
                         <View style={styles.doubleTitle}>
                             <Text style={styles.infoTitle}>Referencias</Text>
@@ -90,7 +111,7 @@ export default function PersonalProfile() {
 
                 <ProfileOptionsSection
                     title={'Configuraciones'}
-                    options={['Verificar perfil']}
+                    options={driverConfigOptions()}
                 />
                 <ProfileOptionsSection
                     title={'Soporte'}

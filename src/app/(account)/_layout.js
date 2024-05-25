@@ -7,7 +7,7 @@ export default function TabLayout() {
     return (
         <Stack>
             <Stack.Screen name="Login" options={{ headerShown: false }} />
-            <Stack.Screen name="RegisterForm" options={{ headerTitle: 'Información personal', headerTintColor: 'white', headerStyle: { backgroundColor: colors.PRIMARY_COLOR } }} />
+            <Stack.Screen name="RegisterForm" options={{ headerTitle: 'Cuenta', headerTintColor: 'white', headerStyle: { backgroundColor: colors.PRIMARY_COLOR } }} />
         </Stack>
     );
 }

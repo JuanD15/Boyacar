@@ -49,8 +49,8 @@ export default function CreateTrip() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: 'Crea tu viaje', }} />
-            <Text style={styles.title}>Crear un viaje</Text>
+            <Stack.Screen options={{ title: 'Crea tu viaje', headerStyle: { backgroundColor: colors.PRIMARY_COLOR, }, headerTintColor: 'white' }} />
+            <Text style={styles.title}>Detalles del viaje</Text>
             <TouchableOpacity onPress={showDatepicker} style={styles.datePicker}>
                 <Text style={styles.dateText}>Fecha: {date.toLocaleDateString()}</Text>
             </TouchableOpacity>
