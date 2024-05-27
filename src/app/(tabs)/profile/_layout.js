@@ -6,6 +6,7 @@ export default function MenuStack() {
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name='tripsManage' options={{ headerShown: false }} />
+            <Stack.Screen name='VehicleForm' options={{ title: 'Vuelvete Conductor' }} />
         </Stack>
     )
 }

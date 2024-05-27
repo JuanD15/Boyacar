@@ -4,8 +4,17 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as DocumentPicker from 'expo-document-picker';
 import colors from "../constants/colors";
 import { Picker } from '@react-native-picker/picker';
+import { signOut } from '../services/SignOut';
+import { insertPerson } from '../services/PersonService';
+import { insertProfile } from '../services/ProfileService';
+import { useAuth } from '../providers/AuthProvider';
+import { formatDate } from '../utils/FormatDate';
+import moment from 'moment';
 
-export default function PersonalDetailsForm({ handleNext }) {
+
+export default function PersonalDetailsForm() {
+    const { user, profile, setProfile } = useAuth()
+
     const [identityNumber, setIdentityNumber] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -16,27 +25,69 @@ export default function PersonalDetailsForm({ handleNext }) {
     const [documentFile, setDocumentFile] = useState(null);
     const genderOptions = ['Masculino', 'Femenino', 'Otro'];
 
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() - 18);
+
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || birthDate;
+
+        currentDate.setHours(12, 0, 0);
+
         setShowDatePicker(false);
         setBirthDate(currentDate);
     };
 
     const handleSubmit = () => {
-        const age = new Date().getFullYear() - birthDate.getFullYear();
-        if (!identityNumber || identityNumber.length < 8 || identityNumber.length > 10 || age < 21) {
+        if (!identityNumber || identityNumber.length < 8 || identityNumber.length > 10) {
             Alert.alert('Error', 'Todos los campos obligatorios deben estar completos y válidos.');
             return;
         }
-        handleNext({
-            identityNumber,
-            firstName,
-            lastName,
-            birthDate,
-            gender,
-            phoneNumber,
-            documentFile
-        });
+
+        const birthDateFormatted = birthDate.toISOString().split('T')[0];
+
+        const person = {
+            person_id: identityNumber,
+            person_name: firstName,
+            person_last_name: lastName,
+            birth_date: birthDateFormatted,
+            person_gender: gender,
+            phone_number: phoneNumber,
+        }
+
+        const profile = {
+            user_id: user.id,
+            person_id: identityNumber
+        }
+
+        insertPerson(person)
+            .then(response => {
+                console.log(response);
+                if (!response.data) {
+                    Alert.alert('Bienvenido', 'Tus datos se han registrado correctamente')
+                } else {
+                    throw response.error
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                Alert.alert('', 'No se ha podido registrar')
+            })
+
+        insertProfile(profile)
+            .then(response => {
+                console.log(response);
+                if (response.data) {
+                    console.log('Perfil agregado');
+                    setProfile(response.data[0])
+                } else {
+                    throw response.error
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+
+            router.push('/PersonalProfile')
     };
 
     const pickDocumentFile = async () => {
@@ -79,7 +130,7 @@ export default function PersonalDetailsForm({ handleNext }) {
                         mode="date"
                         display="default"
                         onChange={onDateChange}
-                        maximumDate={new Date()}
+                        maximumDate={maxDate}
                     />
                 )}
                 <Picker
@@ -105,6 +156,9 @@ export default function PersonalDetailsForm({ handleNext }) {
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSubmit} style={styles.button} >
                     <Text style={styles.buttonText}>Enviar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => signOut()} style={styles.button}>
+                    <Text style={styles.buttonText}>Cerrar sesión</Text>
                 </TouchableOpacity>
             </ScrollView>
         </View>

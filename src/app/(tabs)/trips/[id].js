@@ -111,8 +111,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 20,
         marginHorizontal: 20,
-        // borderBottomColor: 'rgba(182,182,182,.3)',
-        // borderBottomWidth: 1,
     },
     infoTitle: {
         fontSize: 15,

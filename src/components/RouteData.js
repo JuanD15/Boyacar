@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     },
     infoTextTitle: {
         fontSize: 17,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
     },
     info: {
         flexDirection: 'row',

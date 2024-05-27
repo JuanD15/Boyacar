@@ -40,7 +40,7 @@ export default function LicenseDetailsForm({ handleLicenseSubmit }) {
 
     return (
         <View style={styles.container} >
-            <Text style={styles.title}>Información de la licencia de conducción</Text>
+            <Text style={styles.title}>Información de licencia de conducción</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Número de licencia (11 dígitos)"
@@ -106,6 +106,7 @@ export default function LicenseDetailsForm({ handleLicenseSubmit }) {
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                 <Text style={styles.buttonText}>Guardar y continuar</Text>
             </TouchableOpacity>
+
         </View>
     );
 }

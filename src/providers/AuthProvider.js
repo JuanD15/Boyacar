@@ -2,6 +2,10 @@ import React, { createContext, useState, useEffect } from "react";
 import { Text } from "react-native";
 import users from "../constants/userTestData";
 import { supabase } from "../services/ConnectService.mjs";
+import { insertPerson } from "../services/PersonService";
+import { fetchProfileWithUserID, insertProfile } from "../services/ProfileService";
+import { signOut } from "../services/SignOut";
+// import { signUpWithEmailAndPassword } from "../services/SignUpService";
 
 export const AuthContext = createContext({});
 
@@ -11,31 +15,47 @@ export function useAuth() {
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [profile, setProfile] = useState(null);
     const [session, setSession] = useState(null);
     const [initialized, setInitialized] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
+
 
     useEffect(() => {
-        const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
             setSession(session);
-            setUser(session ? session.user : null);
-            setInitialized(true)
-        })
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
+            setInitialized(true);
+            console.log("Auth state changed:", session);
+
+            if (currentUser) {
+                const userProfile = await fetchProfileWithUserID(currentUser.id);
+                console.log('Perfil del usuario -------------------', userProfile);
+                if (userProfile.data) {
+                    setProfile(userProfile.data);
+                } else {
+                    setProfile(null);
+                }
+
+            } else {
+                setProfile(null);
+            }
+        });
+
         return () => {
-            data.subscription.unsubscribe()
+            authListener?.subscription.unsubscribe()
         }
     }, []);
 
-    const signOut = async () => {
-        await supabase.auth.signOut()
-    }
 
     const value = {
         user,
         session,
+        profile,
         initialized,
-        signOut
+        setProfile
     }
 
     return (

@@ -107,7 +107,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.PRIMARY_COLOR,
     },
     title: {
-        fontFamily: 'Inter_Regular',
         fontSize: 25,
         color: 'white',
     },

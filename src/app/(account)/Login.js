@@ -2,9 +2,9 @@ import { useState } from "react";
 import { ImageBackground, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, StatusBar, Alert } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import colors from '../../constants/colors';
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { signOut } from "../../services/SignOut";
 import { signInWithEmailAndPassword } from "../../services/SignInService";
-import { supabase } from "../../services/ConnectService.mjs";
 
 
 export default function Login() {
@@ -14,15 +14,17 @@ export default function Login() {
     const rememberPassword = () => {
         console.log("¿Olvidaste tu contraseña");
     }
+
     const onSignInPress = async () => {
-        const { error } = await signInWithEmailAndPassword({ email, password })
+        console.log({ email, password });
+        const { error } = await signInWithEmailAndPassword(email, password)
 
         if (error) Alert.alert('No se puedo iniciar sesión', error.message)
     }
 
     const register = () => {
-        console.log('Register');
-        navigation.navigate('RegisterForm')
+        signOut()
+        router.replace('RegisterForm')
     }
 
     return (
@@ -43,13 +45,13 @@ export default function Login() {
                     <TextInput
                         placeholder="Correo electrónico"
                         placeholderTextColor='rgba(255,255,255,0.6)'
-                        onChange={setEmail}
+                        onChangeText={setEmail}
                         style={styles.input} />
                     <TextInput
+                        secureTextEntry={true}
                         placeholder="Contraseña"
                         placeholderTextColor='rgba(255,255,255,0.6)'
-                        keyboardType='visible-password'
-                        onChange={setPassword}
+                        onChangeText={setPassword}
                         style={styles.input} />
                 </View>
                 <TouchableOpacity style={styles.forgetPasswordLink} onPress={rememberPassword}>
@@ -60,9 +62,9 @@ export default function Login() {
                 </TouchableOpacity>
                 <View style={styles.viewRegister}>
                     <Text style={styles.noAccountText}>¿No tienes una cuenta? </Text>
-                    <Link href={'/RegisterForm'}>
+                    <TouchableOpacity onPress={register}>
                         <Text style={styles.registerText}>Registrate</Text>
-                    </Link>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -110,7 +112,6 @@ const styles = StyleSheet.create({
     title: {
         color: '#fff',
         marginTop: 71,
-        fontFamily: 'Inter_Regular',
         fontSize: 35,
         width: '100%',
         textAlign: 'center'
@@ -124,7 +125,6 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     input: {
-        fontFamily: 'Inter_Light',
         fontSize: 15,
         height: 46,
         paddingLeft: 35,
@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
     },
     forgetPassword: {
         color: 'rgba(255,255,255,0.6)',
-        fontFamily: 'Inter_Light',
         fontSize: 15
     },
     button: {
@@ -154,7 +153,6 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontFamily: 'Inter_Light',
         fontSize: 17,
         fontWeight: 'bold',
     },
@@ -163,13 +161,11 @@ const styles = StyleSheet.create({
         bottom: -115
     },
     noAccountText: {
-        fontFamily: 'Inter_Light',
         color: '#fff',
         fontSize: 15,
     },
     registerText: {
         fontSize: 15,
-        fontFamily: 'Inter_Light',
         color: '#fff',
         textDecorationLine: 'underline'
     },

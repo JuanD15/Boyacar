@@ -3,10 +3,8 @@ import { FlatList, StatusBar, StyleSheet, View, TextInput } from "react-native";
 import RouteDataComponent from "../../../components/RouteData";
 import routesData from '../../../constants/routeTestData'
 import { Entypo } from '@expo/vector-icons';
-import { TouchableOpacity } from "react-native-web";
 
 export default function Feed() {
-    // console.log(routeTestData.data, 'primer');
     return (
         <View style={styles.feedContainer}>
             <StatusBar hidden={true} />

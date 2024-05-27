@@ -143,11 +143,9 @@ const styles = StyleSheet.create({
     plateContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        // backgroundColor: 'red',
         justifyContent: 'space-between'
     },
     plateInputsContainer: {
-        // backgroundColor: 'red',
         width: '50%',
         flexDirection: 'row',
         alignItems: 'center'

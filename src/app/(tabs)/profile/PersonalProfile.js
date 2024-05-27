@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView, FlatList } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, ScrollView, FlatList, Alert } from "react-native";
 import colors from "../../../constants/colors";
 import { MaterialIcons, Entypo, FontAwesome } from '@expo/vector-icons';
 import { AuthContext, useAuth } from "../../../providers/AuthProvider";
@@ -7,6 +7,8 @@ import PhotoCarousel from '../../../components/PhotoCarousel'
 import { Link, router } from "expo-router";
 import CommentSection from "../../../components/CommentSection";
 import ProfileOptionsSection from "../../../components/ProfileOptionsSection";
+import { fetchPersonWithID } from "../../../services/PersonService";
+import { signOut } from "../../../services/SignOut";
 
 const DriverRating = ({ rating }) => (// Muestra la calificación si el usuario es pasajero
     <Text style={styles.inlineText}>
@@ -17,25 +19,54 @@ const DriverRating = ({ rating }) => (// Muestra la calificación si el usuario 
 );
 
 export default function PersonalProfile() {
-    const { session, initialized } = useAuth();
+    const { session, initialized, profile } = useAuth();
+    const [actualUser, setActualUser] = useState(null);
+
+    const userType = profile.type_profile
+    console.log(typeof profile.person_id);
 
     const screenWidth = Dimensions.get("window").width
     const screenHeight = Dimensions.get("window").height
 
+    useEffect(() => {
+        const fetchPerson = async () => {
+            try {
+                const person = await fetchPersonWithID(profile.person_id);
+                setActualUser(person.data);
+                console.log('actual user', person.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (profile.person_id) {
+            fetchPerson();
+        }
+    }, [profile.person_id]);
+
     const driverConfigOptions = () => {
         const options = ['Verificar perfil']
-        if (actualUser.user_type.toLowerCase() === 'conductor') {
+        if (userType.toLowerCase() === 'conductor') {
             options.push('Informacion de vehiculo', 'Información de licencia')
         }
         return options
     }
 
-    const redirectUserToForm = () => {
-        if (actualUser.user_type.toLowerCase() === 'conductor') {
+    const handleCreateTripRedirect = () => {
+        if (userType.toLowerCase() === 'conductor') {
             router.push('profile/tripsManage/TripForm')
         } else {
+            Alert.alert('Vuelvete conductor', 'Antes de crear un viaje debes llenar algunos datos.')
             router.push('profile/VehicleForm')
         }
+    }
+
+    if (!actualUser) {
+        return (
+            <View style={styles.container}>
+                <Text>Cargando perfil...</Text>
+            </View>
+        );
     }
 
     return (
@@ -47,8 +78,8 @@ export default function PersonalProfile() {
                 <View style={styles.userPersonalInfo}>
                     <Text style={styles.userName}>{actualUser.person_name.split(' ')[0]} {actualUser.person_last_name.split(' ')[0]}</Text>
                     <Text style={styles.info}>
-                        {actualUser.user_type}
-                        {actualUser.user_type.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
+                        {userType}
+                        {userType.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
                             <DriverRating rating={actualUser.rating} />
                         )}
                     </Text>
@@ -65,10 +96,10 @@ export default function PersonalProfile() {
                 activeOpacity={0.8}
                 style={[styles.infoBlock,
                 { width: screenWidth * 0.95, height: screenHeight * 0.14 }]}
-                onPress={() => redirectUserToForm()}>
+                onPress={handleCreateTripRedirect}>
                 <View>
                     <Text style={styles.infoTitle}>Crea un viaje</Text>
-                    <Text style={styles.infoText}>{actualUser.user_type.toLowerCase() === 'conductor' ?
+                    <Text style={styles.infoText}>{userType.toLowerCase() === 'conductor' ?
                         'Comparte tu viaje y comparte tus gastos' : 'Vuelvete conductor y comparte tus viajes'}</Text>
                 </View>
                 <Image source={require('../../../../assets/images/car-icon.png')} style={{ width: 50, height: 30, }} />
@@ -97,7 +128,7 @@ export default function PersonalProfile() {
                     </View>
                     <PhotoCarousel />
                 </View>
-                {actualUser.user_type.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
+                {userType.toLowerCase() === 'conductor' && (//Condicional para saber si el usuario es conductor
                     <View style={styles.profileOptionsSection}>
                         <View style={styles.doubleTitle}>
                             <Text style={styles.infoTitle}>Referencias</Text>
@@ -116,6 +147,11 @@ export default function PersonalProfile() {
                 <ProfileOptionsSection
                     title={'Soporte'}
                     options={['Reportar una inquietud', 'Como funciona Boyacar']}
+                />
+                <ProfileOptionsSection
+                    title={'Cuenta'}
+                    options={['Cerrar sesión']}
+                    action={signOut}
                 />
             </ScrollView>
         </View >

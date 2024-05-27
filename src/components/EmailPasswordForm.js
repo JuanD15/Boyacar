@@ -5,8 +5,11 @@ import { Ionicons } from '@expo/vector-icons';
 import colors from "../constants/colors";
 import { uploadTemporaryImage, updatePicture, uploadProfileImage } from '../services/ImagesServices';
 import { signUpWithEmailAndPassword } from '../services/SignUpService';
+import { supabase } from '../services/ConnectService.mjs';
+import { decode } from 'base64-arraybuffer';
+import { FileSystem } from 'expo-file-system';
 
-export default function EmailPasswordForm({ setEmailPasswordDetails, handleNext }) {
+export default function EmailPasswordForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -41,14 +44,22 @@ export default function EmailPasswordForm({ setEmailPasswordDetails, handleNext 
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [4, 4],
             quality: 0.8
         });
         if (!result.canceled) {
-            setProfileImage(result.assets[0].uri)
-            // const img = result.assets[0]
-            // const base64 = await FileSystem.readStringAsync(img.uri, { encoding: 'base64' })
-            // const filePath=`${user.id}`
+            setProfileImage(result.assets[0].uri);
+            const img = result.assets[0];
+            // console.log(img.uri);
+            // const base64 = await FileSystem.readStringAsync(img.uri, { encoding: 'base64' });
+            // console.log(base64);
+            // const filePath = `${new Date().getTime()}.${img.type === 'image' ? 'png' : 'mp4'}`;
+            // const contentType = img.type === 'image' ? 'image/png' : 'video/mp4';
+
+            const { data, error } = await supabase.storage.from('profile_photos').upload('profile.png', img);
+            console.log(data, error);
+            // await loadImages();
+
             // const response = await uploadProfileImage(result.uri);
             // console.log(response, '----response');
             // console.log(result.uri, '----uri');

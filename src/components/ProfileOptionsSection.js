@@ -4,22 +4,20 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import colors from '../constants/colors';
 
-const ProfileOptionsSection = ({ title, options }) => {
+const ProfileOptionsSection = ({ title, options, action }) => {
     return (
         <View style={styles.profileOptionsSection}>
             <Text style={styles.infoTitle}>{title}</Text>
             {options.map((option, index) => (
-                <Link href={'/Login'} asChild>
-                    <TouchableOpacity style={styles.profileOption}>
-                        <Text>{option}</Text>
-                        <MaterialIcons
-                            name="keyboard-arrow-right"
-                            size={25}
-                            color="rgba(0,0,0,0.2)"
-                            style={styles.arrowIcon}
-                        />
-                    </TouchableOpacity>
-                </Link>
+                <TouchableOpacity style={styles.profileOption} onPress={action}>
+                    <Text>{option}</Text>
+                    <MaterialIcons
+                        name="keyboard-arrow-right"
+                        size={25}
+                        color="rgba(0,0,0,0.2)"
+                        style={styles.arrowIcon}
+                    />
+                </TouchableOpacity>
             ))}
         </View>
     );

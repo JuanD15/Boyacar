@@ -23,10 +23,4 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 /**
  * Creación de cliente con los datos inicializados
  */
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: {
-        detectSessionInUrl: false,
-        storage: ExpoSecureAdapter
-    }
-}
-);
+export const supabase = createClient(supabaseUrl, supabaseKey);

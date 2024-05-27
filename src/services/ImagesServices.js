@@ -13,11 +13,13 @@ export const getURL = async () => {
 export const uploadProfileImage = async (file) => {
     const { data, error } = await supabase
         .storage
-        .from('Profile_Images')
+        .from('profile_photos')
         .upload('profile.png', file, {
             cacheControl: '3600',
             upsert: false
         })
+
+    return { data, error }
 }
 
 export const uploadTemporaryImage = async (file) => {

@@ -1,19 +1,18 @@
 import { supabase } from "./ConnectService.mjs";
 
-export const insertProfile = async (profile) => {
+export const insertPerson = async (personData) => {
     const { data, error } = await supabase
-        .from('Profile')
-        .insert([profile])
-        .select()
+        .from('Person')
+        .insert([personData])
 
     return { data, error }
 }
 
-export const fetchProfileWithUserID = async (id) => {
+export const fetchPersonWithID = async (id) => {
     const { data, error } = await supabase
-        .from('Profile')
+        .from('Person')
         .select()
-        .eq('user_id', id)
+        .eq('person_id', id)
         .maybeSingle()
 
     return { data, error }

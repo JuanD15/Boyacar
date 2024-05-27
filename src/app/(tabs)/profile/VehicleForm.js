@@ -3,31 +3,70 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import VehicleDetailsForm from "../../../components/VehicleDetailsForm";
 import LicenseDetailsForm from "../../../components/LicenseDetailsForm";
 import colors from "../../../constants/colors";
+import { fetchVehicleWithProfileID, insertVehicle } from "../../../services/VehicleService";
+import { fetchLicenseWithProfileID, insertLicense } from "../../../services/LicenseService";
+import { updateProfileType } from "../../../services/ProfileService";
+import { useAuth } from "../../../providers/AuthProvider";
 
 export default function VehicleForm() {
-    //Indica el nivel en el que esta el formulario: 
-    // 1 (por defecto ) no se ha llenado ninguno
-    //2 Se lleno el formulario de vehiculo pero no de licencia
-    const [currentStep, setCurrentStep] = useState(2);
+    const { profile } = useAuth();
+    const [currentStep, setCurrentStep] = useState(1);
     const [vehicleDetails, setVehicleDetails] = useState(null);
     const [licenseDetails, setLicenseDetails] = useState(null);
+
+    useEffect(() => {
+        const checkVehicleAndLicense = async () => {
+            try {
+                const vehicleResponse = await fetchVehicleWithProfileID(profile.person_id);
+                if (vehicleResponse.data) {
+                    setVehicleDetails(vehicleResponse.data);
+                    const licenseResponse = await fetchLicenseWithProfileID(profile.person_id);
+                    if (licenseResponse.data) {
+                        setLicenseDetails(licenseResponse.data);
+                        await updateProfileType(profile.person_id, 'Conductor');
+                        Alert.alert('Éxito', 'Registro de vehículo y licencia completado. Ahora eres un Conductor.');
+                    } else {
+                        setCurrentStep(2);
+                    }
+                } else {
+                    setCurrentStep(1);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        checkVehicleAndLicense();
+    }, [profile.person_id]);
 
     useEffect(() => {
         if (vehicleDetails && !licenseDetails) {
             setCurrentStep(2);
             Alert.alert('Atención', 'Aún no ha llenado la información de la licencia. Por favor, complete los datos.');
         }
-    }, []);
+    }, [vehicleDetails]);
 
-    const handleVehicleSubmit = (details) => {
-        setVehicleDetails(details);
-        setCurrentStep(2);
+    const handleVehicleSubmit = async (details) => {
+        try {
+            await insertVehicle(details);
+            setVehicleDetails(details);
+            setCurrentStep(2);
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'No se pudo registrar el vehículo. Inténtalo de nuevo.');
+        }
     };
 
-    const handleLicenseSubmit = (details) => {
-        setLicenseDetails(details);
-        Alert.alert('Éxito', 'Registro de vehículo completado.');
-        // actualizar estado del usuario (de pasajero a conductor) si se registro correctamente
+    const handleLicenseSubmit = async (details) => {
+        try {
+            await insertLicense(details);
+            setLicenseDetails(details);
+            await updateProfileType(profile.person_id, 'Conductor');
+            Alert.alert('Éxito', 'Registro de vehículo y licencia completado. Ahora eres un Conductor.');
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'No se pudo registrar la licencia. Inténtalo de nuevo.');
+        }
     };
 
     return (
