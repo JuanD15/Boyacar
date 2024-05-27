@@ -1,9 +1,3 @@
-Qué hace el proyecto.
-Por qué el proyecto es útil.
-Cómo pueden comenzar los usuarios con el proyecto.
-Dónde pueden recibir ayuda los usuarios con tu proyecto
-Quién mantiene y contribuye con el proyecto.
-
 El proyecto se trata de una aplicacion movil de viajes comunitarios intermunicipales.
 
 Este proyecto facilita la movilidad en temas como costos seguridad al poder contar con servicio de "puerta puerta" este tipo de servicio se refiere a llevar de la puerta de casa a la puerta del destino, sin contar con la inseguridad del tranporte publico, etc.
