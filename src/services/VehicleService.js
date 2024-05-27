@@ -1,11 +1,11 @@
 import { supabase } from "./ConnectService.mjs";
 
 export const insertVehicle = async (vehicleData) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from('Vehicle')
         .insert([vehicleData])
 
-    return { data, error }
+    return { error }
 }
 
 export const fetchVehicleWithProfileID = async (id) => {
@@ -14,6 +14,22 @@ export const fetchVehicleWithProfileID = async (id) => {
         .select()
         .eq('profile_id', id)
         .maybeSingle()
+
+    return { data, error }
+}
+
+export const insertManufacturer = async (manufacturer) => {
+    const { error } = await supabase
+        .from('Manufacturer')
+        .insert([manufacturer])
+
+    return { error }
+}
+
+export const fetchManufacturer = async () => {
+    const { data, error } = await supabase
+        .from('Manufacturer')
+        .select()
 
     return { data, error }
 }

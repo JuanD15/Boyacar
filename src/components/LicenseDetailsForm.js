@@ -1,20 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from "../constants/colors";
 import { Picker } from '@react-native-picker/picker';
+import { useAuth } from '../providers/AuthProvider';
+import { fetchRestrictions } from '../services/LicenseService';
+
 
 export default function LicenseDetailsForm({ handleLicenseSubmit }) {
+    const { profile } = useAuth()
     const [licenseNumber, setLicenseNumber] = useState('');
     const [issueDate, setIssueDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [licenseType, setLicenseType] = useState('');
     const [bloodType, setBloodType] = useState('');
     const [rh, setRh] = useState('');
-    const [restrictions, setRestrictions] = useState('');
+    const [restriction, setRestriction] = useState('');
+    const [restrictions, setRestrictions] = useState([]);
     const licenseTypes = ['A', 'B', 'C'];
     const bloodTypes = ['O', 'A', 'B', 'AB'];
     const rhOptions = ['+', '-'];
+
+
+    useEffect(() => {
+        const loadRestrictions = async () => {
+            const { data, error } = await fetchRestrictions();
+            if (error) {
+                Alert.alert('Error', 'Error al cargar las restricciones del conductor');
+            } else {
+                setRestrictions(data);
+            }
+        };
+        loadRestrictions()
+    }, [])
 
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || issueDate;
@@ -28,12 +46,13 @@ export default function LicenseDetailsForm({ handleLicenseSubmit }) {
             return;
         }
         handleLicenseSubmit({
-            licenseNumber,
-            issueDate,
-            licenseType,
-            bloodType,
-            rh,
-            restrictions,
+            driving_license_id: licenseNumber,
+            profile_id: profile.profile_id,
+            issue_date: issueDate,
+            license_type: licenseType,
+            blood_type: bloodType,
+            RH: rh,
+            driver_restrictions: restriction,
         })
         Alert.alert('Éxito', 'Licencia registrada correctamente.');
     };
@@ -94,14 +113,14 @@ export default function LicenseDetailsForm({ handleLicenseSubmit }) {
                 </Picker>
             </View>
             <Picker
-                selectedValue={restrictions}
+                selectedValue={restriction}
                 style={styles.input}
-                onValueChange={(itemValue) => setRestrictions(itemValue)}
+                onValueChange={(itemValue) => setRestriction(itemValue)}
             >
-                <Picker.Item label="Selecciona las restricciones" value="" />
-                <Picker.Item label="Ninguna" value="Ninguna" />
-                <Picker.Item label="Restricción 1" value="Restricción 1" />
-                <Picker.Item label="Restricción 2" value="Restricción 2" />
+                <Picker.Item label="Seleccionar restricción si aplica" value="" />
+                {restrictions.map((res) => (
+                    <Picker.Item key={res.restriction_id} label={`${res.restriction}`} value={res.restriction_id} />
+                ))}
             </Picker>
             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                 <Text style={styles.buttonText}>Guardar y continuar</Text>

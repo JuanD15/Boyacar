@@ -18,3 +18,11 @@ export const fetchProfileWithUserID = async (id) => {
 
     return { data, error }
 }
+
+export const updateProfileType = async (userId) => {
+
+    const { error } = await supabase
+        .from('Profile')
+        .update({ type_profile: 'Conductor' })
+        .eq('user_id', userId)
+}

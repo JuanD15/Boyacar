@@ -10,6 +10,8 @@ import { insertProfile } from '../services/ProfileService';
 import { useAuth } from '../providers/AuthProvider';
 import { formatDate } from '../utils/FormatDate';
 import moment from 'moment';
+import { router } from 'expo-router';
+
 
 
 export default function PersonalDetailsForm() {
@@ -61,7 +63,6 @@ export default function PersonalDetailsForm() {
 
         insertPerson(person)
             .then(response => {
-                console.log(response);
                 if (!response.data) {
                     Alert.alert('Bienvenido', 'Tus datos se han registrado correctamente')
                 } else {
@@ -70,7 +71,7 @@ export default function PersonalDetailsForm() {
             })
             .catch(error => {
                 console.log(error);
-                Alert.alert('', 'No se ha podido registrar')
+                Alert.alert('', 'No se ha podido registrar, intenta nuevamente')
             })
 
         insertProfile(profile)
@@ -87,7 +88,7 @@ export default function PersonalDetailsForm() {
                 console.log(error);
             })
 
-            router.push('/PersonalProfile')
+        router.push('/PersonalProfile')
     };
 
     const pickDocumentFile = async () => {

@@ -1,36 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import colors from '../constants/colors';
 import { Picker } from '@react-native-picker/picker';
+import { useAuth } from '../providers/AuthProvider';
+import { fetchManufacturer, insertVehicle } from '../services/VehicleService';
+
 
 export default function VehicleDetailsForm({ handleVehicleSubmit }) {
+    const { profile } = useAuth()
     const [plateLetters, setPlateLetters] = useState('');
     const [plateNumbers, setPlateNumbers] = useState('');
     const [vehicleType, setVehicleType] = useState('');
     const [soat, setSoat] = useState(null);
+    const [manufacturer, setManufacturer] = useState('');
+    const [manufacturers, setManufacturers] = useState([]);
     const [insurance, setInsurance] = useState('');
     const [capacity, setCapacity] = useState('');
     const [color, setColor] = useState('');
     const [vehicleImage, setVehicleImage] = useState(null);
     const insuranceOptions = ['Seguros XYZ', 'Seguros ABC', 'Seguros DEF'];
 
-    const handleSubmit = () => {
-        if (!plateLetters || !plateNumbers || !vehicleType || !insurance || !capacity || !color) {
+    useEffect(() => {
+        const loadManufacturers = async () => {
+            const { data, error } = await fetchManufacturer();
+            if (error) {
+                Alert.alert('Error', 'Error al cargar los fabricantes de vehículos');
+            } else {
+                setManufacturers(data);
+            }
+        };
+
+        loadManufacturers();
+    }, []);
+
+    const handleSubmit = async () => {
+        if (!plateLetters || !plateNumbers || !manufacturer || !insurance || !capacity || !color) {
             Alert.alert('Error', 'Todos los campos obligatorios deben estar completos.');
             return;
         }
-        handleVehicleSubmit({
-            plate: plateLetters + plateNumbers,
-            vehicleType,
-            soat,
-            insurance,
-            capacity,
-            color,
-            vehicleImage
-        });
+        const vehicleDetails = {
+            vehicle_id: plateLetters + plateNumbers,
+            profile_id: profile.profile_id,
+            manufacturer_id: manufacturer,
+            vehicle_insurace: insurance,
+            capacity: capacity,
+            vehicle_color: color,
+            car_photo: vehicleImage,
+        };
+
+        const { error } = await insertVehicle(vehicleDetails);
+        console.log(error, 'error');
+        if (error) {
+            Alert.alert('Error', 'Error al registrar el vehículo.');
+        } else {
+            Alert.alert('Éxito', 'Vehículo registrado exitosamente.');
+            handleVehicleSubmit(vehicleDetails);
+        }
     };
+
 
     const pickSoat = async () => {
         let result = await DocumentPicker.getDocumentAsync({});
@@ -76,15 +105,14 @@ export default function VehicleDetailsForm({ handleVehicleSubmit }) {
                 </View>
             </View>
             <Picker
-                selectedValue={vehicleType}
+                selectedValue={manufacturer}
                 style={styles.input}
-                onValueChange={(itemValue) => setVehicleType(itemValue)}
+                onValueChange={(itemValue) => setManufacturer(itemValue)}
             >
-                <Picker.Item label="Selecciona el tipo de vehículo" value="" />
-                {/* Opciones del picker obtenidas desde el API */}
-                <Picker.Item label="Sedán" value="Sedán" />
-                <Picker.Item label="SUV" value="SUV" />
-                <Picker.Item label="Camioneta" value="Camioneta" />
+                <Picker.Item label="Selecciona el fabricante del vehículo" value="" />
+                {manufacturers.map((man) => (
+                    <Picker.Item key={man.manufacturer_id} label={`${man.mark} ${man.line} ${man.model}`} value={man.manufacturer_id} />
+                ))}
             </Picker>
             <TouchableOpacity onPress={pickSoat} style={styles.button}>
                 <Text style={styles.buttonText}>{soat ? 'SOAT seleccionado' : 'Seleccionar SOAT'}</Text>

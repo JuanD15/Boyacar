@@ -13,7 +13,7 @@ import { signOut } from "../../../services/SignOut";
 const DriverRating = ({ rating }) => (// Muestra la calificación si el usuario es pasajero
     <Text style={styles.inlineText}>
         <Entypo name="dot-single" size={15} color="black" />
-        {` ${rating} `}
+        {` ${rating || '0.0'} `}
         <FontAwesome name="star" size={15} color={colors.PRIMARY_COLOR} />
     </Text>
 );
@@ -23,7 +23,6 @@ export default function PersonalProfile() {
     const [actualUser, setActualUser] = useState(null);
 
     const userType = profile.type_profile
-    console.log(typeof profile.person_id);
 
     const screenWidth = Dimensions.get("window").width
     const screenHeight = Dimensions.get("window").height
@@ -33,7 +32,6 @@ export default function PersonalProfile() {
             try {
                 const person = await fetchPersonWithID(profile.person_id);
                 setActualUser(person.data);
-                console.log('actual user', person.data);
             } catch (error) {
                 console.error(error);
             }

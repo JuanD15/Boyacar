@@ -38,7 +38,7 @@ export default AccountDataForm = (props) => {
             quality: 1,
         });
 
-        if (!result.cancelled) {
+        if (!result.canceled) {
             setImage(result.uri);
         }
     };

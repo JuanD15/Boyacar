@@ -1,6 +1,6 @@
 import { supabase } from "./ConnectService.mjs";
 
-export const insertDrivingLicense = async (licenseData) => {
+export const insertLicense = async (licenseData) => {
     const { data, error } = await supabase
         .from('Driving License')
         .insert([licenseData])
@@ -16,4 +16,12 @@ export const fetchLicenseWithProfileID = async (id) => {
         .maybeSingle()
 
     return { data, error }
+}
+
+export const fetchRestrictions=async()=>{
+    const { data, error } = await supabase
+    .from('Driver Restrictions')
+    .select()
+
+return { data, error }   
 }

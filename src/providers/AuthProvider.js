@@ -18,8 +18,6 @@ const AuthProvider = ({ children }) => {
     const [profile, setProfile] = useState(null);
     const [session, setSession] = useState(null);
     const [initialized, setInitialized] = useState(false);
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState(null);
 
 
     useEffect(() => {
@@ -28,11 +26,9 @@ const AuthProvider = ({ children }) => {
             const currentUser = session?.user ?? null;
             setUser(currentUser);
             setInitialized(true);
-            console.log("Auth state changed:", session);
 
             if (currentUser) {
                 const userProfile = await fetchProfileWithUserID(currentUser.id);
-                console.log('Perfil del usuario -------------------', userProfile);
                 if (userProfile.data) {
                     setProfile(userProfile.data);
                 } else {

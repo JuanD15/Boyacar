@@ -1,19 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import colors from "../../../../constants/colors";
 import { Picker } from '@react-native-picker/picker';
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
+import { insertTrip } from "../../../../services/TripService";
+import { useAuth } from "../../../../providers/AuthProvider";
+import { fetchVehicleWithProfileID } from "../../../../services/VehicleService";
 
 export default function CreateTrip() {
+    const { profile } = useAuth()
+    const [vehicle, setVehicle] = useState();
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [slots, setSlots] = useState('');
     const [departureCity, setDepartureCity] = useState('');
     const [destinyCity, setDestinyCity] = useState('');
+    const [cost, setCost] = useState();
     const [address, setAddress] = useState('');
     const cities = [
+        { label: 'Tunja', value: 'Tunja' },
         { label: 'Duitama', value: 'Duitama' },
         { label: 'Sogamoso', value: 'Sogamoso' },
         { label: 'Paipa', value: 'Paipa' },
@@ -39,13 +46,47 @@ export default function CreateTrip() {
     };
 
     const handleSubmit = () => {
-        if (!slots || !departureCity || date < new Date()) {
+        if (!slots || !departureCity || date < new Date() || !cost || !destinyCity) {
             Alert.alert('Error', 'Por favor, completa todos los campos obligatorios y asegúrate de que la fecha sea igual o superior a la actual.');
             return;
         }
-        // Aquí puedes manejar el envío del formulario
-        Alert.alert('Éxito', 'Viaje creado correctamente.');
+
+        const trip = {
+            vehicle_id: vehicle,
+            profile_id: profile.profile_id,
+            available_seats: slots,
+            date_time_departure: date,
+            address: address,
+            cost: cost,
+            city_origin: departureCity,
+            city_destiny: destinyCity
+        }
+
+        submitTrip(trip)
     };
+
+    useEffect(() => {
+        const fetchVehicle = async () => {
+            try {
+                const data = await fetchVehicleWithProfileID(profile.profile_id);
+                console.log('Se obtuvo el vehiculo de placa', data.data.vehicle_id);
+                setVehicle(data.data.vehicle_id)
+            } catch (error) {
+                console.log('No se pudo obtener el vehiculo', error);
+            }
+        }
+        fetchVehicle()
+    }, []);
+
+    const submitTrip = async (tripData) => {
+        try {
+            const data = await insertTrip(tripData);
+            Alert.alert('Éxito', 'Viaje creado correctamente.');
+            router.push('/profile')
+        } catch (error) {
+            Alert.alert('Error', 'No se pudo crear el viaje. Inténtalo de nuevo.');
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -97,6 +138,13 @@ export default function CreateTrip() {
                     ))}
                 </Picker>
             </View>
+            <TextInput
+                style={styles.input}
+                placeholder="Costo"
+                keyboardType="numeric"
+                value={cost}
+                onChangeText={setCost}
+            />
             <TextInput
                 style={styles.input}
                 placeholder="Dirección (opcional)"

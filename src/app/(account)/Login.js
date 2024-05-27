@@ -16,7 +16,6 @@ export default function Login() {
     }
 
     const onSignInPress = async () => {
-        console.log({ email, password });
         const { error } = await signInWithEmailAndPassword(email, password)
 
         if (error) Alert.alert('No se puedo iniciar sesión', error.message)

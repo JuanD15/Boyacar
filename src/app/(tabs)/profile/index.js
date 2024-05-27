@@ -7,7 +7,6 @@ import { useAuth } from '../../../providers/AuthProvider';
 
 export default function Profile() {
     const { session, profile } = useAuth()
-    console.log('\nSesion:-----------------------------\n' + session, '\n\nPerfil:-----------------------------\n' + profile + '\n');
 
 
     if (session) {

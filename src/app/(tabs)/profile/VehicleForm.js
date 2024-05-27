@@ -7,6 +7,7 @@ import { fetchVehicleWithProfileID, insertVehicle } from "../../../services/Vehi
 import { fetchLicenseWithProfileID, insertLicense } from "../../../services/LicenseService";
 import { updateProfileType } from "../../../services/ProfileService";
 import { useAuth } from "../../../providers/AuthProvider";
+import { router } from "expo-router";
 
 export default function VehicleForm() {
     const { profile } = useAuth();
@@ -17,13 +18,13 @@ export default function VehicleForm() {
     useEffect(() => {
         const checkVehicleAndLicense = async () => {
             try {
-                const vehicleResponse = await fetchVehicleWithProfileID(profile.person_id);
+                const vehicleResponse = await fetchVehicleWithProfileID(profile.profile_id);
                 if (vehicleResponse.data) {
                     setVehicleDetails(vehicleResponse.data);
-                    const licenseResponse = await fetchLicenseWithProfileID(profile.person_id);
+                    const licenseResponse = await fetchLicenseWithProfileID(profile.profile_id);
                     if (licenseResponse.data) {
                         setLicenseDetails(licenseResponse.data);
-                        await updateProfileType(profile.person_id, 'Conductor');
+                        await updateProfileType(profile.profile_id);
                         Alert.alert('Éxito', 'Registro de vehículo y licencia completado. Ahora eres un Conductor.');
                     } else {
                         setCurrentStep(2);
@@ -37,7 +38,7 @@ export default function VehicleForm() {
         };
 
         checkVehicleAndLicense();
-    }, [profile.person_id]);
+    }, [profile.profile_id]);
 
     useEffect(() => {
         if (vehicleDetails && !licenseDetails) {
@@ -48,20 +49,22 @@ export default function VehicleForm() {
 
     const handleVehicleSubmit = async (details) => {
         try {
-            await insertVehicle(details);
+            const data = await insertVehicle(details);
             setVehicleDetails(details);
             setCurrentStep(2);
         } catch (error) {
-            console.error(error);
             Alert.alert('Error', 'No se pudo registrar el vehículo. Inténtalo de nuevo.');
         }
     };
 
     const handleLicenseSubmit = async (details) => {
         try {
-            await insertLicense(details);
+            console.log(details, 'details license in.......')
+            const data = await insertLicense(details);
+            console.log(data, 'dataLicense response.......')
             setLicenseDetails(details);
-            await updateProfileType(profile.person_id, 'Conductor');
+            await updateProfileType(profile.user_id);
+            router.push('/profile')
             Alert.alert('Éxito', 'Registro de vehículo y licencia completado. Ahora eres un Conductor.');
         } catch (error) {
             console.error(error);
