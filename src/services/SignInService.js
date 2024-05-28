@@ -5,7 +5,7 @@ export const signInWithEmailAndPassword = async (email, password) => {
     email,
     password,
   });
-
+  console.log(email);
   /**
    * 
    */

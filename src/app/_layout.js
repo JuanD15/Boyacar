@@ -34,15 +34,14 @@ function RootLayoutNav() {
     }, []);
 
     useEffect(() => {
+        if (session) {
+            router.push('/(tabs)/profile/')
+        }
         console.log(segments);
         if (segments[1] === 'profile' && !session) {
             console.log('session', session);
             router.push('/Login')
         }
-        if (session) {
-            router.push('/(tabs)/profile/')
-        }
-
     }, [session, profile])
     // if (!initialized) {
     //     return <Text>Loading...</Text>;

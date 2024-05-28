@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FlatList, StatusBar, StyleSheet, View, TextInput } from "react-native";
 import RouteDataComponent from "../../../components/RouteData";
 import routesData from '../../../constants/routeTestData'
-import showTrips from '../../../services/TripsListService';
 import { Entypo } from '@expo/vector-icons';
+import { fetchTrips } from "../../../services/TripService";
 
 export default function Feed() {
+    const [trips, setTrips] = useState([]);
+
+    useEffect(() => {
+        const fetchMyTrips = async () => {
+            const trips = await fetchTrips()
+            console.log(trips.data, '-----------------------------------------------------');
+            setTrips(trips.data)
+        };
+        fetchMyTrips()
+    }, []);
+
+
     return (
         <View style={styles.feedContainer}>
             <StatusBar hidden={true} />
@@ -15,7 +27,7 @@ export default function Feed() {
                 {/* <TouchableOpacity /> */}
             </View>
             <FlatList
-                data={showTrips}
+                data={trips}
                 renderItem={({ index, item }) => (
                     <RouteDataComponent data={item} />
                 )}

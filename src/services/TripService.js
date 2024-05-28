@@ -11,7 +11,6 @@ export const insertTrip = async (tripData) => {
 export const fetchTrips = async () => {
     const { data, error } = await supabase
         .from('Trip')
-        .select()
-
+        .select('*, Profile(*,Person(*))')
     return { data, error }
 }

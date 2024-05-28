@@ -39,7 +39,7 @@ export default function PersonalDetailsForm() {
         setBirthDate(currentDate);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!identityNumber || identityNumber.length < 8 || identityNumber.length > 10) {
             Alert.alert('Error', 'Todos los campos obligatorios deben estar completos y válidos.');
             return;
@@ -61,7 +61,7 @@ export default function PersonalDetailsForm() {
             person_id: identityNumber
         }
 
-        insertPerson(person)
+        await insertPerson(person)
             .then(response => {
                 if (!response.data) {
                     Alert.alert('Bienvenido', 'Tus datos se han registrado correctamente')
@@ -74,7 +74,7 @@ export default function PersonalDetailsForm() {
                 Alert.alert('', 'No se ha podido registrar, intenta nuevamente')
             })
 
-        insertProfile(profile)
+        await insertProfile(profile)
             .then(response => {
                 console.log(response);
                 if (response.data) {
@@ -88,7 +88,7 @@ export default function PersonalDetailsForm() {
                 console.log(error);
             })
 
-        router.push('/PersonalProfile')
+        router.push('(tabs)/profile/PersonalProfile')
     };
 
     const pickDocumentFile = async () => {
