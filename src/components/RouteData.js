@@ -6,34 +6,35 @@ import { Link } from "expo-router";
 import { formatNumber } from "../utils/formatNumbers";
 
 export default function RouteDataComponent({ data }) {
+    console.log(data);
     return (
         <Link href={`/trips/${data.id}`} asChild>
             <Pressable style={styles.routeDataContainer}>
                 <View style={[styles.title, styles.info]}>
                     <EvilIcons name="location" size={24} color="black" />
-                    <Text style={[styles.infoText, styles.infoTextTitle]}>{data.origin} - {data.destination}</Text>
+                    <Text style={[styles.infoText, styles.infoTextTitle]}>{data.city_origin} - {data.city_destiny}</Text>
                 </View>
                 <AntDesign name="arrowright" size={28} color={colors.PRIMARY_COLOR} style={styles.rightArrow} />
                 <View style={[styles.hourInfo, styles.info]}>
                     <EvilIcons name="clock" size={24} color="black" style={styles.infoIcon} />
-                    <Text style={styles.infoText}>{data.approximateDepartureTime}</Text>
+                    <Text style={styles.infoText}>{data.date_time_departure}</Text>
                 </View>
                 <View style={[styles.priceInfo, styles.info]}>
                     <MaterialIcons name="attach-money" size={24} color="black" style={styles.infoIcon} />
-                    <Text style={[styles.infoText, styles.priceInfoText]}>{formatNumber(data.approximatePrice)}</Text>
+                    <Text style={[styles.infoText, styles.priceInfoText]}>{formatNumber(data.cost)}</Text>
                 </View>
                 <View style={[styles.ratingInfo, styles.info]}>
                     <EvilIcons name="star" size={24} color="black" style={styles.infoIcon} />
                     <Text style={styles.infoText}>{data.driverRating} / 5.0 - {data.numberOfOpinios} opiniones</Text>
                 </View>
                 <View style={styles.driverInfoSection}>
-                    {data.driverPhotography ? (
-                        <Image source={{ uri: data.driverPhotography }} style={styles.driverPhoto} />
+                    {data.Profile.Person.person_photo ? (
+                        <Image source={{ uri: data.Profile.Person.person_photo }} style={styles.driverPhoto} />
                     ) : (
                         <FontAwesome name="user-circle-o" size={70} color={colors.PRIMARY_COLOR} style={styles.driverPhoto} />
                     )}
                     <View style={styles.driverInfo}>
-                        <Text style={styles.driverNames}>{data.driverFirstName} {data.driverFirstLastName}</Text>
+                        <Text style={styles.driverNames}>{data.Profile.Person.person_name} {data.Profile.Person.person_last_name}</Text>
                         <Text style={styles.driverAge}>{data.driverAge} años</Text>
                     </View>
                 </View>

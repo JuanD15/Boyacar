@@ -2,6 +2,7 @@ import React from "react";
 import { FlatList, StatusBar, StyleSheet, View, TextInput } from "react-native";
 import RouteDataComponent from "../../../components/RouteData";
 import routesData from '../../../constants/routeTestData'
+import showTrips from '../../../services/TripsListService';
 import { Entypo } from '@expo/vector-icons';
 
 export default function Feed() {
@@ -14,7 +15,7 @@ export default function Feed() {
                 {/* <TouchableOpacity /> */}
             </View>
             <FlatList
-                data={routesData}
+                data={showTrips}
                 renderItem={({ index, item }) => (
                     <RouteDataComponent data={item} />
                 )}
