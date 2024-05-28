@@ -21,8 +21,7 @@ const DriverRating = ({ rating }) => (// Muestra la calificación si el usuario 
 export default function PersonalProfile() {
     const { session, initialized, profile } = useAuth();
     const [actualUser, setActualUser] = useState(null);
-
-    const userType = profile.type_profile
+    const [userType, setUserType] = useState(profile.type_profile);
 
     const screenWidth = Dimensions.get("window").width
     const screenHeight = Dimensions.get("window").height
@@ -32,6 +31,7 @@ export default function PersonalProfile() {
             try {
                 const person = await fetchPersonWithID(profile.person_id);
                 setActualUser(person.data);
+                setUserType(profile.type_profile)
             } catch (error) {
                 console.error(error);
             }

@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, StatusBar, StyleSheet, View, TextInput } from "react-native";
+import { FlatList, StatusBar, StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import RouteDataComponent from "../../../components/RouteData";
 import routesData from '../../../constants/routeTestData'
 import { Entypo } from '@expo/vector-icons';
 import { fetchTrips } from "../../../services/TripService";
+import NoTripsComponent from "../../../components/NoTripsComponent";
+import Spinner from "react-native-loading-spinner-overlay";
 
 export default function Feed() {
     const [trips, setTrips] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchMyTrips = async () => {
-            const trips = await fetchTrips()
-            console.log(trips.data, '-----------------------------------------------------');
-            setTrips(trips.data)
+            try {
+                setLoading(true)
+                const trips = await fetchTrips();
+                setTrips(trips.data);
+            } catch (error) {
+                setLoading(true)
+                console.error('Error al cargar viajes:', error);
+            }
         };
         fetchMyTrips()
+        // console.log(trips);
     }, []);
 
 
@@ -26,12 +35,24 @@ export default function Feed() {
                 <TextInput style={styles.searchBar} placeholder="Buscar..." />
                 {/* <TouchableOpacity /> */}
             </View>
-            <FlatList
-                data={trips}
-                renderItem={({ index, item }) => (
-                    <RouteDataComponent data={item} />
-                )}
-            />
+            {!trips ? (
+                <>
+                    <Spinner visible={loading} />
+                    <NoTripsComponent />
+                </>
+            ) : (
+                <FlatList
+                    data={trips}
+                    renderItem={({ index, item }) => (
+                        <TouchableOpacity
+                            onPress={() => router.push({ pathname: '/RouteDetail', params: { route: item } })}
+                        >
+                            <RouteDataComponent data={item} />
+                        </TouchableOpacity>
+                    )}
+                    keyExtractor={(item) => item.trip_id.toString()}
+                />
+            )}
         </View>
     )
 }

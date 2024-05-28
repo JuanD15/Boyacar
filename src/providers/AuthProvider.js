@@ -26,7 +26,6 @@ const AuthProvider = ({ children }) => {
             const currentUser = session?.user ?? null;
             setUser(currentUser);
             setInitialized(true);
-            console.log('Current Session:', session);
             if (currentUser) {
                 const userProfile = await fetchProfileWithUserID(currentUser.id);
                 if (userProfile.data) {

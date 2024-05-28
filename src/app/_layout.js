@@ -28,8 +28,8 @@ function RootLayoutNav() {
 
 
     useEffect(() => {
-        if (segments[1] === 'trips') {
-            router.push('Login')
+        if (!session) {
+            router.push('/Login')
         }
     }, []);
 
@@ -37,9 +37,7 @@ function RootLayoutNav() {
         if (session) {
             router.push('/(tabs)/profile/')
         }
-        console.log(segments);
         if (segments[1] === 'profile' && !session) {
-            console.log('session', session);
             router.push('/Login')
         }
     }, [session, profile])

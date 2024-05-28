@@ -19,12 +19,7 @@ export default function CreateTrip() {
     const [destinyCity, setDestinyCity] = useState('');
     const [cost, setCost] = useState();
     const [address, setAddress] = useState('');
-    const cities = [
-        { label: 'Tunja', value: 'Tunja' },
-        { label: 'Duitama', value: 'Duitama' },
-        { label: 'Sogamoso', value: 'Sogamoso' },
-        { label: 'Paipa', value: 'Paipa' },
-    ];
+    const cities = ["Tunja", "Sogamoso", "Duitama", "Chiquinquirá", "Paipa", "Villa de Leyva", "Tibasosa", "Tenza", "Monguí", "Ráquira"];
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -122,7 +117,7 @@ export default function CreateTrip() {
                 >
                     <Picker.Item label="Selecciona ciudad origen" value="" />
                     {cities.map((c) => (
-                        <Picker.Item key={c.value} label={c.label} value={c.value} />
+                        <Picker.Item key={c} label={c} value={c} />
                     ))}
                 </Picker>
             </View>
@@ -133,8 +128,8 @@ export default function CreateTrip() {
                     onValueChange={(itemValue) => setDestinyCity(itemValue)}
                 >
                     <Picker.Item label="Selecciona ciudad destino" value="" />
-                    {cities.filter((c) => (c.value != departureCity)).map((c) => (
-                        <Picker.Item key={c.value} label={c.label} value={c.value} />
+                    {cities.filter((c) => (c != departureCity)).map((c) => (
+                        <Picker.Item key={c} label={c} value={c} />
                     ))}
                 </Picker>
             </View>

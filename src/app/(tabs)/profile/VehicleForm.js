@@ -59,9 +59,7 @@ export default function VehicleForm() {
 
     const handleLicenseSubmit = async (details) => {
         try {
-            console.log(details, 'details license in.......')
-            const data = await insertLicense(details);
-            console.log(data, 'dataLicense response.......')
+            await insertLicense(details);
             setLicenseDetails(details);
             await updateProfileType(profile.user_id);
             router.push('/profile')

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { ImageBackground, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, StatusBar, Alert } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import colors from '../../constants/colors';
 import { Link, router } from "expo-router";
 import { signOut } from "../../services/SignOut";
 import { signInWithEmailAndPassword } from "../../services/SignInService";
 
-
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const rememberPassword = () => {
         console.log("¿Olvidaste tu contraseña");
@@ -46,12 +46,18 @@ export default function Login() {
                         placeholderTextColor='rgba(255,255,255,0.6)'
                         onChangeText={setEmail}
                         style={styles.input} />
-                    <TextInput
-                        secureTextEntry={true}
-                        placeholder="Contraseña"
-                        placeholderTextColor='rgba(255,255,255,0.6)'
-                        onChangeText={setPassword}
-                        style={styles.input} />
+                    <View>
+                        <TextInput
+                            secureTextEntry={!showPassword}
+                            placeholder="Contraseña"
+                            placeholderTextColor='rgba(255,255,255,0.6)'
+                            onChangeText={setPassword}
+                            style={styles.input} />
+                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                            <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="white" />
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
                 <TouchableOpacity style={styles.forgetPasswordLink} onPress={rememberPassword}>
                     <Text style={styles.forgetPassword}>¿Olvidaste tu contraseña?</Text>
@@ -124,12 +130,19 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     input: {
-        fontSize: 15,
+        fontSize: 18,
         height: 46,
-        paddingLeft: 35,
+        paddingLeft: 30,
+        paddingRight: 50,
         backgroundColor: 'rgba(255,255,255,0.1)',
         borderRadius: 5,
         color: '#2d2d2d'
+    },
+    eyeIcon: {
+        padding: 10,
+        position: 'absolute',
+        right: 8,
+        justifyContent: 'center'
     },
     forgetPasswordLink: {
         alignSelf: 'flex-start',

@@ -10,5 +10,20 @@ export function formatDate(date) {
 export function prettyDate(date) {
     const formatedDate = formatDate(date);
     const dateObject = parseISO(formatedDate);
-    return format(dateObject, 'EEEE dd \'de\' MMMM', { locale: es });
+    return format(dateObject, 'EEEE dd \'de\' MMMM yyyy', { locale: es });
+}
+
+export function calculateAge(birthDate) {
+    const birth = parseISO(birthDate);
+    const now = moment();
+
+    const age = now.diff(moment(birth), 'years');
+
+    return age;
+}
+
+export function getTwelveHoursDate(date) {
+    const parsedDate = new Date(date);
+
+    return format(parsedDate, 'hh:mm a', { locale: es });
 }
